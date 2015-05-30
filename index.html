@@ -40,25 +40,6 @@ var pieces = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', ''],
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-var key = {
-    87 : function up () {
-        if( emptySquare >= (rows * cols - cols) ) { return; }
-        methods.move(3);
-    },
-    83 : function down () {
-        if( emptySquare < cols ) { return; }
-        methods.move(-3);
-    },
-    68 : function right () {
-        if( [0,3,6].indexOf(emptySquare) !== -1 ) { return false; }
-        methods.move(-1);
-    },
-    65 : function left () {
-        if( [2,5,8].indexOf(emptySquare) !== -1 ) { return false; }
-        methods.move(1);
-    }
-};
-
 var methods = {
     swap : function (from, to, list) {
         var temp = list[from];
@@ -93,7 +74,40 @@ var methods = {
         methods.draw();
     },
 
-    shuffle : function (times) {}
+    shuffle : function (times) {},
+
+    actions : {
+        up : function () {
+            if( emptySquare >= (rows * cols - cols) ) { return; }
+            methods.move(3);
+        },
+
+        down : function () {
+            if( emptySquare < cols ) { return; }
+            methods.move(-3);
+        },
+
+        right : function () {
+            if( [0,3,6].indexOf(emptySquare) !== -1 ) { return false; }
+            methods.move(-1);
+        },
+
+        left : function () {
+            if( [2,5,8].indexOf(emptySquare) !== -1 ) { return false; }
+            methods.move(1);
+        }
+    }
+};
+
+var key = {
+    87 : methods.actions.up,
+    38 : methods.actions.up,
+    83 : methods.actions.down,
+    40 : methods.actions.down,
+    68 : methods.actions.right,
+    39 : methods.actions.right,
+    65 : methods.actions.left,
+    37 : methods.actions.left
 };
 
 methods.draw();
