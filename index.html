@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shuffle Puzzle Game</title>
+
+    <style>
+        * {margin:0;padding:0;}
+        html, body {width:100%;height:100%;}
+        #game {
+            border:1px solid #d6d6d6;
+            position:absolute;
+            top:50%;
+            left:50%;
+            -webkit-transform:translate(-50%, -50%);
+            -ms-transform:translate(-50%, -50%);
+            transform:translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="game" width="450" height="450"></canvas>
+
+<script>
+
+var pieces = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', ''],
+    states = [1,1,1,1,1,1,1,1,0],
+    emptySquare = states.indexOf(0),
+    canvas = document.getElementById('game'),
+    ctx = canvas.getContext('2d'),
+    c = -1,
+    rows = 3,
+    cols = 3,
+    square = {
+        x : 150,
+        y : 150
+    };
+
+    ctx.font = '45px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+var key = {
+    87 : function up () {
+        if( emptySquare >= (rows * cols - cols) ) { return; }
+        methods.move(3);
+    },
+    83 : function down () {
+        if( emptySquare < cols ) { return; }
+        methods.move(-3);
+    },
+    68 : function right () {
+        if( [0,3,6].indexOf(emptySquare) !== -1 ) { return false; }
+        methods.move(-1);
+    },
+    65 : function left () {
+        if( [2,5,8].indexOf(emptySquare) !== -1 ) { return false; }
+        methods.move(1);
+    }
+};
+
+var methods = {
+    swap : function (from, to, list) {
+        var temp = list[from];
+        list[from] = list[to];
+        list[to] = temp;
+    },
+
+    draw : function () {
+        for(var i = 0; i < pieces.length; i++) {
+            if( (i % cols) === 0 ) {
+                c++;
+            }
+
+            var x = (i % cols) * square.x + (square.x / 2);
+            var y = c * square.y + (square.y / 2);
+
+            ctx.fillText(pieces[i], x, y);
+        }
+
+        emptySquare = states.indexOf(0);
+    },
+
+    reset : function () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        c = -1;
+    },
+
+    move : function (shift) {
+        methods.reset();
+        methods.swap(emptySquare, emptySquare + shift, states);
+        methods.swap(emptySquare, emptySquare + shift, pieces);
+        methods.draw();
+    },
+
+    shuffle : function (times) {}
+};
+
+methods.draw();
+
+document.querySelector('body').addEventListener('keydown', function (e) {
+    if( ! key.hasOwnProperty( e.keyCode ) ) { return; }
+
+    key[e.keyCode]();
+});
+
+</script>
+</body>
+</html>
