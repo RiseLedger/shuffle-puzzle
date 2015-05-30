@@ -74,7 +74,14 @@ var methods = {
         methods.draw();
     },
 
-    shuffle : function (times) {},
+    shuffle : function (times) {
+        var directions = ['up', 'down', 'left', 'right'];
+
+        for(var i = 0; i < times; i++) {
+            var move = Math.floor( Math.random() * directions.length );
+            methods.actions[ directions[move] ]();
+        }
+    },
 
     actions : {
         up : function () {
@@ -111,6 +118,7 @@ var key = {
 };
 
 methods.draw();
+methods.shuffle(100);
 
 document.querySelector('body').addEventListener('keydown', function (e) {
     if( ! key.hasOwnProperty( e.keyCode ) ) { return; }
